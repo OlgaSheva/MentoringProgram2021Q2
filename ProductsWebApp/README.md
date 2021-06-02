@@ -9,11 +9,11 @@ You should create a website, that enables operations with the Northwind Database
 
 ## Base requirements:
 
-The site should be developed using ASP.Net Core 2+;
-The application should at least work on Microsoft Windows (cross-platform is fine, but not strictly required) 
-MS SQL Server should be used as a DB engine (you can use any edition, including Express or LocalDB)
-EF Core is used to enable data access layer
-If there are no special instructions, no requirements apply to the layout and styling of the pages
+- The site should be developed using ASP.Net Core 2+;
+- The application should at least work on Microsoft Windows (cross-platform is fine, but not strictly required) 
+- MS SQL Server should be used as a DB engine (you can use any edition, including Express or LocalDB)
+- EF Core is used to enable data access layer
+- If there are no special instructions, no requirements apply to the layout and styling of the pages
 
 ## Task 1. Base site
 
@@ -42,7 +42,7 @@ Add edit forms (New and Update) for the Products:
 Related entities (such as Category) should be presented as a dropdown list
 Add server-side validation for edited products (not less than 3 different rules)
 
-##Task 4. Styling and client-side validation
+## Task 4. Styling and client-side validation
 
 Add two client libraries to the project:
 
