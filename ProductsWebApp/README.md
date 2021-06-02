@@ -19,14 +19,14 @@ You should create a website, that enables operations with the Northwind Database
 
 Create a web site with the following pages:
 
-The Home page that contains a welcome message and links to other pages
-The Categories page. Shows a list of categories without images
-The Products page. Shows a table with the products 
-The table contains all products fields
-Instead of references to Category and Supplier, their names should be shown
-Note:
+- The Home page that contains a welcome message and links to other pages
+- The Categories page. Shows a list of categories without images
+- The Products page. Shows a table with the products 
+-- The table contains all products fields
+-- Instead of references to Category and Supplier, their names should be shown
 
-All configuration parameters (connection strings, etc.) can remain in the code (hardcoded)
+### Note:
+- All configuration parameters (connection strings, etc.) can remain in the code (hardcoded)
 
 ## Task 2. Startup and configuration
 
