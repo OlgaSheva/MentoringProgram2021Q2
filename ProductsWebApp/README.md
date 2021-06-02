@@ -22,8 +22,8 @@ Create a web site with the following pages:
 - The Home page that contains a welcome message and links to other pages
 - The Categories page. Shows a list of categories without images
 - The Products page. Shows a table with the products 
--- The table contains all products fields
--- Instead of references to Category and Supplier, their names should be shown
+  - The table contains all products fields
+  - Instead of references to Category and Supplier, their names should be shown
 
 ### Note:
 - All configuration parameters (connection strings, etc.) can remain in the code (hardcoded)
@@ -32,42 +32,40 @@ Create a web site with the following pages:
 
 Add a configuration feature that supports two parameters:
 
-Database connection string
-Maximum (M) amount of products shown on the Product page (show only first M products, others – ignored; if M == 0, then show all products)
+- Database connection string
+- Maximum (M) amount of products shown on the Product page (show only first M products, others – ignored; if M == 0, then show all products)
 
 ## Task 3. Edit forms and Server-side validation
 
 Add edit forms (New and Update) for the Products:
 
-Related entities (such as Category) should be presented as a dropdown list
-Add server-side validation for edited products (not less than 3 different rules)
+- Related entities (such as Category) should be presented as a dropdown list
+- Add server-side validation for edited products (not less than 3 different rules)
 
 ## Task 4. Styling and client-side validation
 
 Add two client libraries to the project:
+- Bootstrap 
+- jQuery Unobtrusive Validation
 
-Bootstrap 
-jQuery Unobtrusive Validation
 For Bootstrap:
+- Apply Bootstrap styles to site pages/forms
+- Change links to Categories and Product pages to navigation bar with the "hamburger" button
 
-Apply Bootstrap styles to site pages/forms
-Change links to Categories and Product pages to navigation bar with the "hamburger" button
 For jQuery Unobtrusive Validation:
-
-Configure client-side validation by analogy with task 3.
+- Configure client-side validation by analogy with task 3.
 
 ## Task 5. Logging and error handling
 
 Configure logging:
+- configure writing logs into a log file
+- write the following events and information
+  - application startup (Additional information: application location - folder path)
+  - configuration reading (Additional information: current configuration values)
+  - 
+Create a custom error handler, which:
+- logs exception
+- returns error page with associated information (to look up appropriate records in the logs)
 
-configure writing logs into a log file
-write the following events and information
-application startup (Additional information: application location - folder path)
-configuration reading (Additional information: current configuration values)
-Create a custom error handler, which: 
-
-logs exception
-returns error page with associated information (to look up appropriate records in the logs)
 Note. To get thrown exception in the error handler you can use the following snippet:
-
 var error = this.HttpContext.Features.Get<IExceptionHandlerFeature>().Error;
