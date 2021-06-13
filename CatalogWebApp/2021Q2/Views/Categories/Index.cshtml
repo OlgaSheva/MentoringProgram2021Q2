@@ -1,0 +1,21 @@
+﻿@model IEnumerable<_2021Q2.Models.Northwind.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Categories</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="collapse d-sm-inline-flex flex-sm-row-reverse">
+    <ul class="flex-grow-1">
+        @foreach (var item in Model)
+        {
+            <li class="nav-item">
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </li>
+        }
+    </ul>
+</div>
