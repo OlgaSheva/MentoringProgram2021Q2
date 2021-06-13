@@ -1,30 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using _2021Q2.Models.Northwind;
-using Microsoft.Extensions.Options;
-using _2021Q2.Models.Configuration;
 using Microsoft.Extensions.Configuration;
 using _2021Q2.Models;
+using Microsoft.Extensions.Logging;
 
 namespace _2021Q2.Controllers
 {
     public class ProductsController : Controller
     {
         private const string MAX_COUNT = "ProductSettings:MaxShownProductCount";
+
         private readonly NorthwindContext _context;
         private readonly int maxShownProductCount;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(NorthwindContext context, IConfiguration configuration)
+        public ProductsController(NorthwindContext context, IConfiguration configuration, ILogger<ProductsController> logger)
         {
             _context = context;
             maxShownProductCount = configuration != null
                 ? configuration.GetValue<int>(MAX_COUNT)
                 : throw new ArgumentNullException(nameof(configuration));
+            _logger = logger;
+            _logger.LogInformation($"Maximum shown product count: {maxShownProductCount}");
         }
 
         // GET: Products
@@ -57,12 +58,14 @@ namespace _2021Q2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductEditViewModel productEditViewModel)
         {
+            _logger.LogInformation($"Creating product id = {productEditViewModel.Product.ProductId}");
             if (ModelState.IsValid)
             {
                 _context.Add(productEditViewModel.Product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            _logger.LogInformation($"Created product id = {productEditViewModel.Product.ProductId}");
             return View(productEditViewModel.Product);
         }
 
@@ -71,14 +74,17 @@ namespace _2021Q2.Controllers
         {
             if (id == null)
             {
+                _logger.LogError($"Product id can not be null.");
                 return NotFound();
             }
 
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
+                _logger.LogError($"Product id = {id} not found.");
                 return NotFound();
             }
+
             var products = new ProductEditViewModel
             {
                 Product = product,
@@ -91,11 +97,12 @@ namespace _2021Q2.Controllers
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductEditViewModel products)
+        public async Task<IActionResult> Edit(int id, ProductEditViewModel productEditViewModel)
         {
-            var product = products.Product;
+            var product = productEditViewModel.Product;
             if (id != product.ProductId)
             {
+                _logger.LogError($"Product id = {id} not found.");
                 return NotFound();
             }
 
@@ -103,8 +110,10 @@ namespace _2021Q2.Controllers
             {
                 try
                 {
+                    _logger.LogInformation($"Editing product id = {id}");
                     _context.Update(product);
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation($"Edited product id = {id}");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -119,7 +128,7 @@ namespace _2021Q2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(products);
+            return View(productEditViewModel);
         }
 
         // GET: Products/Delete/5
@@ -127,17 +136,19 @@ namespace _2021Q2.Controllers
         {
             if (id == null)
             {
+                _logger.LogError($"Product id can not be null.");
                 return NotFound();
             }
 
-            var products = await _context.Products
+            var product = await _context.Products
                 .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (products == null)
+            if (product == null)
             {
+                _logger.LogError($"Product id = {id} not found.");
                 return NotFound();
             }
 
-            return View(products);
+            return View(product);
         }
 
         // POST: Products/Delete/5
@@ -145,9 +156,11 @@ namespace _2021Q2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var products = await _context.Products.FindAsync(id);
-            _context.Products.Remove(products);
+            var product = await _context.Products.FindAsync(id);
+            _logger.LogInformation($"Removing product id = {id}");
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
+            _logger.LogInformation($"Removed product id = {id}");
             return RedirectToAction(nameof(Index));
         }
 
