@@ -9,6 +9,7 @@ using _2021Q2.Models.Northwind;
 using Microsoft.Extensions.Options;
 using _2021Q2.Models.Configuration;
 using Microsoft.Extensions.Configuration;
+using _2021Q2.Models;
 
 namespace _2021Q2.Controllers
 {
@@ -39,44 +40,30 @@ namespace _2021Q2.Controllers
             }
         }
 
-        // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var products = await _context.Products
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (products == null)
-            {
-                return NotFound();
-            }
-
-            return View(products);
-        }
-
         // GET: Products/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
-            return View();
+            var products = new ProductEditViewModel
+            {
+                Product = new Product(),
+                Categories = await _context.Categories.ToListAsync(),
+                Suppliers = await _context.Suppliers.ToListAsync()
+            };
+            return View(products);
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,SupplierId,CategoryId,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued")] Product products)
+        public async Task<IActionResult> Create(ProductEditViewModel productEditViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(products);
+                _context.Add(productEditViewModel.Product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(products);
+            return View(productEditViewModel.Product);
         }
 
         // GET: Products/Edit/5
@@ -87,22 +74,27 @@ namespace _2021Q2.Controllers
                 return NotFound();
             }
 
-            var products = await _context.Products.FindAsync(id);
-            if (products == null)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
+            var products = new ProductEditViewModel
+            {
+                Product = product,
+                Categories = await _context.Categories.ToListAsync(),
+                Suppliers = await _context.Suppliers.ToListAsync()
+            };
             return View(products);
         }
 
         // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,SupplierId,CategoryId,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued")] Product products)
+        public async Task<IActionResult> Edit(int id, ProductEditViewModel products)
         {
-            if (id != products.ProductId)
+            var product = products.Product;
+            if (id != product.ProductId)
             {
                 return NotFound();
             }
@@ -111,12 +103,12 @@ namespace _2021Q2.Controllers
             {
                 try
                 {
-                    _context.Update(products);
+                    _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductsExists(products.ProductId))
+                    if (!ProductsExists(product.ProductId))
                     {
                         return NotFound();
                     }

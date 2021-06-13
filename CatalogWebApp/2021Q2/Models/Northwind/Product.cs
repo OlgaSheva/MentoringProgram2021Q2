@@ -17,22 +17,30 @@ namespace _2021Q2.Models.Northwind
 
         [Required]
         [DataType(DataType.Text)]
-        [StringLength(50, MinimumLength = 3,
-            ErrorMessage = "Product name must be between 3 and 50 characters long")]
+        [StringLength(20, MinimumLength = 3,
+            ErrorMessage = "Product name must be between 3 and 20 characters long")]
         public string ProductName { get; set; }
 
         public int? SupplierId { get; set; }
 
         public int? CategoryId { get; set; }
 
+        [Required]
+        [DataType(DataType.Text)]
+        [StringLength(20, MinimumLength = 3,
+            ErrorMessage = "Quantity per unit must be between 3 and 20 characters long")]
         public string QuantityPerUnit { get; set; }
 
+        [Range(0, 999.99)]
         public decimal? UnitPrice { get; set; }
 
+        [Range(0, 100)]
         public short? UnitsInStock { get; set; }
 
+        [Range(0, 100)]
         public short? UnitsOnOrder { get; set; }
 
+        [Range(0, 100)]
         public short? ReorderLevel { get; set; }
 
         public bool Discontinued { get; set; }
