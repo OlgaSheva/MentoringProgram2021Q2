@@ -141,6 +141,8 @@ namespace _2021Q2.Controllers
             }
 
             var product = await _context.Products
+                .Include(p => p.Supplier)
+                .Include(p => p.Category)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
@@ -156,8 +158,12 @@ namespace _2021Q2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var orders = _context.OrderDetails
+                .Where(o => o.ProductId == id);
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductId == id);
             _logger.LogInformation($"Removing product id = {id}");
+            _context.OrderDetails.RemoveRange(orders);
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"Removed product id = {id}");
