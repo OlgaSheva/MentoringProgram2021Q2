@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using Catalog.Controllers;
+using Catalog.Models;
 using Catalog.Models.Northwind;
 using CatalogTests.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -37,8 +38,8 @@ namespace CatalogTests.Controllers
             dbContext.SetupGet(x => x.Categories).Returns(TestFunctions.GetDbSet<Category>(TestData.Categories).Object);
 
             var controller = new CategoriesController(dbContext.Object, logger.Object);
-            await controller.Create(new Category() { CategoryName = "category3" });
-            
+            await controller.Create(new CategoryViewModel() { CategoryName = "category3" });
+
             dbContext.Verify(c => c.AddAsync(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
             dbContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }

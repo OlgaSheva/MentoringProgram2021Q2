@@ -14,6 +14,9 @@
         @foreach (var item in Model)
         {
             <li class="nav-item">
+                <a asp-action="Image" asp-route-id="@item.CategoryId">
+                    <img src="@String.Format("data:image/jpg;base64,{0}", item.Base64String)">
+                </a>
                 @Html.DisplayFor(modelItem => item.CategoryName)
             </li>
         }

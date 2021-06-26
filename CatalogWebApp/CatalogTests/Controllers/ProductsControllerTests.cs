@@ -79,29 +79,6 @@ namespace CatalogTests.Controllers
                 Times.Once);
         }
 
-        [Fact]
-        public async void Delete_OkResult()
-        {
-            var configuration = GetConfigurationRoot();
-            var logger = new Mock<ILogger<ProductsController>>();
-            var dbContext = new Mock<NorthwindContext>();
-            dbContext.SetupGet(x => x.Products).Returns(TestFunctions.GetDbSet<Product>(TestData.Products).Object);
-
-            var controller = new ProductsController(dbContext.Object, configuration, logger.Object);
-            await controller.Delete(1);
-
-            dbContext.Verify(c => c.Remove(It.IsAny<Product>()), Times.Once);
-            dbContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-            logger.Verify(
-                x => x.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((o, t) => string.Equals("Removing product id = 1", o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-                Times.Once);
-        }
-
         private static IConfigurationRoot GetConfigurationRoot()
         {
             var inMemorySettings = new Dictionary<string, string>
