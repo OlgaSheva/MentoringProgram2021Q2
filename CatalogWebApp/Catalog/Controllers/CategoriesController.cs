@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Catalog.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +29,12 @@ namespace Catalog.Controllers
 
         public async Task<IActionResult> Image([FromRoute]int? id)
         {
-            return View(await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id));
+            if (_context.Categories.Any(c => c.CategoryId == id))
+            {
+                return View(await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id));
+            }
+
+            throw new ArgumentException($"Picture with id = {id} does not exist");
         }
 
         // GET: Categories/Create

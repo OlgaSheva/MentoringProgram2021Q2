@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalog.Controllers;
 using Catalog.Models;
 using Catalog.Models.Northwind;
@@ -31,7 +33,7 @@ namespace CatalogTests.Controllers
         }
 
         [Fact]
-        public async void Create_OkResult()
+        public async Task Create_OkResult()
         {
             var logger = new Mock<ILogger<CategoriesController>>();
             var dbContext = new Mock<NorthwindContext>();
@@ -42,6 +44,17 @@ namespace CatalogTests.Controllers
 
             dbContext.Verify(c => c.AddAsync(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
             dbContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Image_OkResult()
+        {
+            var logger = new Mock<ILogger<CategoriesController>>();
+            var dbContext = new Mock<NorthwindContext>();
+            dbContext.SetupGet(x => x.Categories).Returns(TestFunctions.GetDbSet<Category>(TestData.Categories).Object);
+
+            var controller = new CategoriesController(dbContext.Object, logger.Object);
+            await Assert.ThrowsAsync<ArgumentException>(() => controller.Image(0));
         }
     }
 }

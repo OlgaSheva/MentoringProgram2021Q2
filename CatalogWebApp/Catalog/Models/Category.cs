@@ -7,7 +7,8 @@ namespace Catalog.Models.Northwind
 {
     public partial class Category
     {
-        [NotMapped] public string Base64String
+        [NotMapped]
+        public string Base64String
         {
             get
             {
