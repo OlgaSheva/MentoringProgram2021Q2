@@ -26,7 +26,7 @@ namespace Catalog.Controllers
         {
             return View(await _context.Categories.ToListAsync());
         }
-
+        
         public async Task<IActionResult> Image([FromRoute]int? id)
         {
             if (_context.Categories.Any(c => c.CategoryId == id))
