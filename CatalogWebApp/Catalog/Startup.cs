@@ -70,10 +70,6 @@ namespace Catalog
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "image",
-                    pattern: "Image/{id?}",
-                    defaults: new { Controller = "Categories", action = "Image" });
-                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });

@@ -1,47 +1,52 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Catalog.Models;
 using Catalog.Services;
-using Microsoft.AspNetCore.ResponseCaching;
-using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
+using System.IO;
 
 namespace Catalog.Middlewares
 {
-    // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
     public class ImageCashingMiddleware
     {
+        private const string ContentType = "image/bmp";
         private readonly RequestDelegate _next;
         private readonly ICashPictureService _cashPictureService;
-        private readonly CashSettings _cashSettings;
 
-        public ImageCashingMiddleware(RequestDelegate next, ICashPictureService cashPictureService, IOptions<CashSettings> configuration)
+        public ImageCashingMiddleware(RequestDelegate next, ICashPictureService cashPictureService)
         {
             _next = next;
             _cashPictureService = cashPictureService;
-            _cashSettings = configuration.Value;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext httpContext)
         {
-            context.Response.GetTypedHeaders().CacheControl =
-                new CacheControlHeaderValue()
-                {
-                    MaxAge = TimeSpan.FromSeconds(_cashSettings.CacheExpirationTimeInSec)
-                };
-            var responseCachingFeature = context.Features.Get<IResponseCachingFeature>();
-            if (responseCachingFeature != null)
+            var id = int.Parse((Regex.Match(httpContext.Request.Path.Value, @"Image/(?'id'\d+)")).Groups["id"].Value);
+            var cashExists = await _cashPictureService.TryCashedDataAsync(id, httpContext.Response);
+            if (httpContext.Response.ContentType == ContentType && cashExists)
             {
-                responseCachingFeature.VaryByQueryKeys = new[] { "id" };
+                return;
             }
+            else
+            {
+                Stream originalBody = httpContext.Response.Body;
+                try
+                {
+                    await _next(httpContext);
 
-            await _next(context);
+                    if (httpContext.Response.ContentType == ContentType)
+                    {
+                        await _cashPictureService.Cash(id, originalBody);
+                    }
+                }
+                finally
+                {
+                    httpContext.Response.Body = originalBody;
+                }
+            }
         }
     }
-
-    // Extension method used to add the middleware to the HTTP request pipeline.
+    
     public static class MiddlewareExtensions
     {
         public static IApplicationBuilder UseImageCashing(this IApplicationBuilder builder)
