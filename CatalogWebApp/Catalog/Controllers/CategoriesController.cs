@@ -26,15 +26,24 @@ namespace Catalog.Controllers
         {
             return View(await _context.Categories.ToListAsync());
         }
-        
+
+        [Route("Image/{id?}")]
+        [Route("{controller}/{action}/{id?}")]
         public async Task<IActionResult> Image([FromRoute]int? id)
         {
+            
             if (_context.Categories.Any(c => c.CategoryId == id))
             {
-                return View(await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id));
+                var picture = (await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id))?.Picture;
+                if (picture == null)
+                {
+                    return NotFound();
+                }
+
+                return File(picture, "image/bmp");
             }
 
-            throw new ArgumentException($"Picture with id = {id} does not exist");
+            return NotFound();
         }
 
         // GET: Categories/Create
