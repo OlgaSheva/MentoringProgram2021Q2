@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Catalog.Models;
 using Catalog.Models.Northwind;
+using Catalog.ViewModels;
 using Microsoft.Extensions.Logging;
 
 namespace Catalog.Controllers

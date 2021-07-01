@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Catalog.Models
+namespace Catalog.ViewModels
 {
     public class CategoryViewModel
     {

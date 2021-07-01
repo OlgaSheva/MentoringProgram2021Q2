@@ -1,4 +1,4 @@
-﻿namespace Catalog.Models
+﻿namespace Catalog.ViewModels
 {
     public class CashSettings
     {

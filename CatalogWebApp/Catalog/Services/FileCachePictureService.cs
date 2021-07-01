@@ -3,20 +3,13 @@ using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Catalog.Models;
-using Microsoft.AspNetCore.Http;
+using Catalog.Interfaces;
+using Catalog.ViewModels;
 using Microsoft.Extensions.Options;
 
 namespace Catalog.Services
 {
-    public interface ICashPictureService
-    {
-        Task Cash(int id, Stream stream);
-
-        Task<bool> TryCashedDataAsync(int id, HttpResponse response);
-    }
-
-    public class FileCashPictureService : ICashPictureService
+    public class FileCachePictureService : ICachePictureService
     {
         private readonly Regex _regex = new Regex(@"img(?'id'\d+)_(?'datetime'.+)");
         private readonly CashSettings _configuration;
@@ -25,7 +18,7 @@ namespace Catalog.Services
         private readonly int _cacheExpirationTimeInSec;
         private readonly DirectoryInfo _directory;
 
-        public FileCashPictureService(IOptions<CashSettings> configuration)
+        public FileCachePictureService(IOptions<CashSettings> configuration)
         {
             _configuration = configuration == null
                 ? throw new ArgumentNullException(nameof(configuration))
@@ -36,40 +29,38 @@ namespace Catalog.Services
             _directory = Directory.CreateDirectory($"{Directory.GetCurrentDirectory()}{_path}");
         }
 
-        public async Task Cash(int id, Stream stream)
+        public async Task Cache(int id, Stream stream)
         {
             var files = _directory.GetFiles();
             if (files.Length < _maxCashedImagesCount)
             {
                 var filePath = $"{_directory}\\img{id}_{DateTime.UtcNow:yyyyMMddTHHmmss}";
-                using (FileStream fileStream = File.OpenWrite(filePath))
-                {
-                    await stream.CopyToAsync(fileStream);
-                }
+                await using FileStream fileStream = File.OpenWrite(filePath);
+                stream.Seek(0, SeekOrigin.Begin);
+                await stream.CopyToAsync(fileStream);
             }
         }
 
-        public async Task<bool> TryCashedDataAsync(int id, HttpResponse response)
+        public async Task<MemoryStream> GetCachedData(int id)
         {
             var fileName = GetExistFileName(id);
-            var filePath = $"{_directory}\\{fileName}";
-            if (fileName != null)
+            if (fileName == null)
             {
-                var cashedDateTime = DateTime.ParseExact(_regex.Match(fileName).Groups["datetime"].Value, "yyyyMMddTHHmmss", CultureInfo.InvariantCulture);
-                if ((DateTime.UtcNow - cashedDateTime).Seconds > _cacheExpirationTimeInSec)
-                {
-                    File.Delete(filePath);
-                    return false;
-                }
-
-                response.ContentType = "image/bmp";
-                using FileStream fileStream = File.OpenRead(filePath);
-                Stream responseBodyStream = response.Body;
-                await fileStream.CopyToAsync(responseBodyStream);
-                return true;
+                return null;
             }
 
-            return false;
+            var filePath = $"{_directory}\\{fileName}";
+            var cashedDateTime = DateTime.ParseExact(_regex.Match(fileName).Groups["datetime"].Value, "yyyyMMddTHHmmss", CultureInfo.InvariantCulture);
+            if ((DateTime.UtcNow - cashedDateTime).Seconds > _cacheExpirationTimeInSec)
+            {
+                File.Delete(filePath);
+                return null;
+            }
+
+            await using FileStream fileStream = File.OpenRead(filePath);
+            var result = new MemoryStream();
+            await fileStream.CopyToAsync(result);
+            return result;
         }
 
         private string GetExistFileName(int id)

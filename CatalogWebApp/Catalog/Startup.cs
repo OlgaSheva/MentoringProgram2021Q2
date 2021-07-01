@@ -1,9 +1,10 @@
 using System;
 using Catalog.Filters;
+using Catalog.Interfaces;
 using Catalog.Middlewares;
-using Catalog.Models;
 using Catalog.Models.Northwind;
 using Catalog.Services;
+using Catalog.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +40,7 @@ namespace Catalog
             }
 
             services.AddResponseCaching();
-            services.AddTransient<ICashPictureService, FileCashPictureService>()
+            services.AddTransient<ICachePictureService, FileCachePictureService>()
                 .Configure<CashSettings>(Configuration.GetSection("CashSettings"));
 
             services.AddMvc();
