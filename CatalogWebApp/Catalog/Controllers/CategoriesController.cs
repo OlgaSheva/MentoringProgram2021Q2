@@ -2,10 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalog.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Catalog.Models.Northwind;
+using Catalog.ViewModels;
 using Microsoft.Extensions.Logging;
 
 namespace Catalog.Controllers
@@ -31,10 +31,9 @@ namespace Catalog.Controllers
         [Route("{controller}/{action}/{id?}")]
         public async Task<IActionResult> Image([FromRoute]int? id)
         {
-            
             if (_context.Categories.Any(c => c.CategoryId == id))
             {
-                var picture = (await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id))?.Picture;
+                var picture = (await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id))?.Picture.Skip(78).ToArray();
                 if (picture == null)
                 {
                     return NotFound();

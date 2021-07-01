@@ -1,6 +1,6 @@
 ﻿using System;
 using Catalog.Controllers;
-using Catalog.Models;
+using Catalog.ViewModels;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;

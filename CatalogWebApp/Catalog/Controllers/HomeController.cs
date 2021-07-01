@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.IO;
-using Catalog.Models;
+using Catalog.ViewModels;
 using Microsoft.AspNetCore.Http;
 
 namespace Catalog.Controllers
@@ -23,6 +23,7 @@ namespace Catalog.Controllers
 
         public IActionResult Index()
         {
+            throw new Exception();
             return View();
         }
 
@@ -43,7 +44,7 @@ namespace Catalog.Controllers
 
             string requestId = Activity.Current?.Id ?? _httpContextAccessor.HttpContext.TraceIdentifier;
             _logger.LogError($"Request ID: {requestId}, exception message: {exceptionMessage}");
-            return View(new ErrorViewModel { RequestId = requestId, ErrorMessage = exceptionMessage });
+            return View(new ViewModels.ErrorViewModel { RequestId = requestId, ErrorMessage = exceptionMessage });
         }
     }
 }

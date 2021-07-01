@@ -2,46 +2,51 @@
 using Microsoft.AspNetCore.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Catalog.Services;
 using System.IO;
+using Catalog.Interfaces;
 
 namespace Catalog.Middlewares
 {
-    public class ImageCashingMiddleware
+    public class ImageCachingMiddleware
     {
         private const string ContentType = "image/bmp";
         private readonly RequestDelegate _next;
-        private readonly ICashPictureService _cashPictureService;
+        private readonly ICachePictureService _cachePictureService;
 
-        public ImageCashingMiddleware(RequestDelegate next, ICashPictureService cashPictureService)
+        public ImageCachingMiddleware(RequestDelegate next, ICachePictureService cachePictureService)
         {
             _next = next;
-            _cashPictureService = cashPictureService;
+            _cachePictureService = cachePictureService;
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
             var id = int.Parse((Regex.Match(httpContext.Request.Path.Value, @"Image/(?'id'\d+)")).Groups["id"].Value);
-            var cashExists = await _cashPictureService.TryCashedDataAsync(id, httpContext.Response);
-            if (httpContext.Response.ContentType == ContentType && cashExists)
+            var cache = await _cachePictureService.GetCachedData(id);
+            if (cache != null)
             {
+                httpContext.Response.ContentType = ContentType;
+                await httpContext.Response.Body.WriteAsync(cache.ToArray());
                 return;
             }
             else
             {
+                await using MemoryStream memoryStream = new MemoryStream();
                 Stream originalBody = httpContext.Response.Body;
+                httpContext.Response.Body = memoryStream;
                 try
                 {
                     await _next(httpContext);
 
                     if (httpContext.Response.ContentType == ContentType)
                     {
-                        await _cashPictureService.Cash(id, originalBody);
+                        await _cachePictureService.Cache(id, memoryStream);
                     }
                 }
                 finally
                 {
-                    httpContext.Response.Body = originalBody;
+                    memoryStream.Seek(0, SeekOrigin.Begin); 
+                    await memoryStream.CopyToAsync(originalBody);
                 }
             }
         }
@@ -51,7 +56,7 @@ namespace Catalog.Middlewares
     {
         public static IApplicationBuilder UseImageCashing(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<ImageCashingMiddleware>();
+            return builder.UseMiddleware<ImageCachingMiddleware>();
         }
     }
 }

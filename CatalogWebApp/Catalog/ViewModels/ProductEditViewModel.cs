@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Catalog.Models.Northwind;
 
-namespace Catalog.Models
+namespace Catalog.ViewModels
 {
     public class ProductEditViewModel
     {
