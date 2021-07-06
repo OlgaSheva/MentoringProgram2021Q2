@@ -2,24 +2,22 @@
 <html lang="en">
 <head>
     <partial name="_LayoutHead" />
+    <style>
+        body {
+            background-color: #c7b39b;
+        }
+    </style>
 </head>
 <body>
     <header>
         <partial name="_LayoutNavbar" />
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-    <footer>
-        <div class="footer text-center text-warning">
-            @RenderSection("Warning", required: false)
-        </div>
-        <div class="footer text-center">
-            <span class="text-muted">Web .NET Mentoring Program [2021Q2]</span>
-        </div>
-    </footer>
 
     <partial name="_LayoutScripts" />
     @RenderSection("Scripts", required: false)
