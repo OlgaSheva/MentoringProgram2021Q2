@@ -1,17 +1,25 @@
-﻿<!DOCTYPE html>
+﻿@using Catalog.ViewModels
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <partial name="_LayoutHead" />
+    <partial name="_HeadPartial" />
 </head>
 <body>
+
     <header>
-        <partial name="_LayoutNavbar" />
+        <partial name="_NavbarPartial" />
     </header>
+    
+    <div class="container">
+        @await Component.InvokeAsync(typeof(BreadcrumbViewComponent), new { viewContext = ViewContext })
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+
     <footer>
         <div class="footer text-center text-warning">
             @RenderSection("Warning", required: false)
@@ -21,7 +29,7 @@
         </div>
     </footer>
 
-    <partial name="_LayoutScripts" />
+    <partial name="_ScriptsPartial" />
     @RenderSection("Scripts", required: false)
 </body>
 </html>

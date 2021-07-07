@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <partial name="_LayoutHead" />
+    <partial name="_HeadPartial" />
     <style>
         body {
             background-color: #c7b39b;
@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <partial name="_LayoutNavbar" />
+        <partial name="_NavbarPartial" />
     </header>
 
     <div class="container">
@@ -19,7 +19,7 @@
         </main>
     </div>
 
-    <partial name="_LayoutScripts" />
+    <partial name="_ScriptsPartial" />
     @RenderSection("Scripts", required: false)
 </body>
 </html>

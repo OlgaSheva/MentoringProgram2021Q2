@@ -1,0 +1,13 @@
+﻿@using Catalog.Services
+@model IList<Catalog.ViewModels.Breadcrumb>
+
+    <h6>
+        @foreach (var breadcrumb in Model)
+        {
+            if (breadcrumb != Model.First())
+            {
+                <span> > </span>
+            }
+            <a asp-controller="@breadcrumb.Controller" asp-action="@breadcrumb.Action" asp-route-id="@breadcrumb.Id">@breadcrumb.Title</a>
+        }
+    </h6>
