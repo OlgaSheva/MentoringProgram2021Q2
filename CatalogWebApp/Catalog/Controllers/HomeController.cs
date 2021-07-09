@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.IO;
-using Catalog.ViewModels;
 using Microsoft.AspNetCore.Http;
 
 namespace Catalog.Controllers
@@ -23,7 +22,6 @@ namespace Catalog.Controllers
 
         public IActionResult Index()
         {
-            throw new Exception();
             return View();
         }
 

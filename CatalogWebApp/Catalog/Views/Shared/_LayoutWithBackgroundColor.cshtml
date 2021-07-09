@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="_HeadPartial" />
+    <style>
+        body {
+            background-color: #c7b39b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <partial name="_NavbarPartial" />
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <partial name="_ScriptsPartial" />
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
