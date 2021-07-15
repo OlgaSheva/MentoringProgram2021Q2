@@ -6,10 +6,17 @@
 </head>
 <body>
 
-    <header>
-        <partial name="_NavbarPartial" />
-    </header>
-    
+    @if (IsSectionDefined("Header"))
+    {
+        @RenderSection("Header", required: false)
+    }
+    else
+    {
+        <header>
+            <partial name="_NavbarPartial" />
+        </header>
+    }
+
     <div class="container">
         @await Component.InvokeAsync(typeof(BreadcrumbViewComponent), new { viewContext = ViewContext })
     </div>
@@ -20,14 +27,18 @@
         </main>
     </div>
 
-    <footer>
-        <div class="footer text-center text-warning">
-            @RenderSection("Warning", required: false)
-        </div>
-        <div class="footer text-center">
-            <span class="text-muted">Web .NET Mentoring Program [2021Q2]</span>
-        </div>
-    </footer>
+    @if (IsSectionDefined("Footer"))
+    {
+        @RenderSection("Footer", required: false)
+    }
+    else
+    {
+        <footer>
+            <div class="footer text-center">
+                <span class="text-muted">Web .NET Mentoring Program [2021Q2]</span>
+            </div>
+        </footer>
+    }
 
     <partial name="_ScriptsPartial" />
     @RenderSection("Scripts", required: false)
