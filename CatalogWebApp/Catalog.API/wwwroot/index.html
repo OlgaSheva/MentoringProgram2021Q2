@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Product App</title>
+</head>
+<body>
+
+    <div>
+        <h2>All Products</h2>
+        <ul id="products" />
+    </div>
+    <div>
+        <h2>All Categories</h2>
+        <ul id="categories" />
+    </div>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            // Send an AJAX request
+            $.getJSON('api/products')
+                .done(function (data) {
+                    // On success, 'data' contains a list of products.
+                    $.each(data, function (key, item) {
+                        // Add a list item for the product.
+                        $('<li>', { text: formatProductItem(item) }).appendTo($('#products'));
+                    });
+                });
+        });
+
+        $(document).ready(function () {
+            // Send an AJAX request
+            $.getJSON('api/categories')
+                .done(function (data) {
+                    // On success, 'data' contains a list of products.
+                    $.each(data, function (key, item) {
+                        // Add a list item for the product.
+                        $('<li>', { text: formatCategoryItem(item) }).appendTo($('#categories'));
+                    });
+                });
+        });
+
+        function formatProductItem(item) {
+            return 'Name: ' + item.productName + ', Category: ' + item.categoryName + ', Supplier: ' + item.supplierName;
+        }
+
+        function formatCategoryItem(item) {
+            return item.categoryName + ', Description: ' + item.description;
+        }
+
+    </script>
+</body>
+</html>
