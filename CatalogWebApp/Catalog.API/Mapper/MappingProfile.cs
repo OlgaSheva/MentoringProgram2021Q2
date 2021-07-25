@@ -10,7 +10,12 @@ namespace Catalog.API.Mapper
         {
             CreateMap<CategoryDTO, Category>();
             CreateMap<Category, CategoryDTO>();
-            CreateMap<ProductDTO, Product>();
+            CreateMap<ProductDTO, Product>()
+	            .ForMember(dest => dest.CategoryName,
+	            opt => opt.MapFrom(src => src.Category.CategoryName))
+	            .ForMember(dest => dest.SupplierName,
+		            opt => opt.MapFrom(src => src.Supplier.CompanyName))
+	            .ReverseMap();
             CreateMap<Product, ProductDTO>();
             CreateMap<SupplierDTO, Supplier>();
             CreateMap<Supplier, SupplierDTO>();

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Catalog.API.Models;
 using Catalog.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -31,14 +30,16 @@ namespace Catalog.API.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<IEnumerable<Category>> Get()
+        public async Task<ActionResult<IEnumerable<Category>>> Get()
         {
             var categoriesDto = await _categoryService.GetAllAsync();
-            return _mapper.Map<IEnumerable<Category>>(categoriesDto);
+            return Ok(_mapper.Map<IEnumerable<Category>>(categoriesDto));
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Category), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Category>> GetCategory(int? id)
         {
             if (id == null)
@@ -53,25 +54,29 @@ namespace Catalog.API.Controllers
                 return NotFound();
             }
 
-            return _mapper.Map<Category>(category);
-        }
-
-        // POST api/Categories
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
+            return Ok(_mapper.Map<Category>(category));
         }
 
         // PUT api/Categories/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Put(int id, IFormFile file)
         {
-        }
+	        var category = await _categoryService.GetAsync((int)id);
+	        if (file != null)
+	        {
+		        byte[] imageData = null;
+		        using (var binaryReader = new BinaryReader(file.OpenReadStream()))
+		        {
+			        imageData = binaryReader.ReadBytes((int)file.Length);
+		        }
 
-        // DELETE api/Categories/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+		        category.Picture = imageData;
+	        }
+
+	        await _categoryService.EditAsync(category);
+	        return Ok();
         }
     }
 }
