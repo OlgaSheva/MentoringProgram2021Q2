@@ -1,0 +1,618 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Catalog.API",
+    "description": "A catalog ASP.NET Core Web API",
+    "termsOfService": "https://example.com/terms",
+    "contact": {
+      "name": "Shayne Boyer",
+      "url": "https://twitter.com/spboyer",
+      "email": ""
+    },
+    "license": {
+      "name": "Use under LICX",
+      "url": "https://example.com/license"
+    },
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Gets all categories.",
+        "operationId": "GeCategories",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Categories/{categoryId}": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Gets a specific category.",
+        "operationId": "GetCategory",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "description": "The categoryId.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "The categoryId.",
+              "format": "int32",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Categories"
+        ],
+        "operationId": "PutCategory",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "nullable": true
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Gets all product.",
+        "operationId": "Get",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Products/{createProductId}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Gets a specific product.",
+        "operationId": "GetProduct",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "The createProductId.",
+            "schema": {
+              "type": "integer",
+              "description": "The createProductId.",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "createProductId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Creates a product.",
+        "operationId": "Post",
+        "parameters": [
+          {
+            "name": "createProductId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "ProductName",
+                  "ReorderLevel",
+                  "UnitPrice",
+                  "UnitsInStock",
+                  "UnitsOnOrder"
+                ],
+                "type": "object",
+                "properties": {
+                  "ProductId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "ProductName": {
+                    "type": "string"
+                  },
+                  "QuantityPerUnit": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "UnitPrice": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "UnitsInStock": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "UnitsOnOrder": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "ReorderLevel": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Discontinued": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "CategoryName": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "SupplierName": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              },
+              "encoding": {
+                "ProductId": {
+                  "style": "form"
+                },
+                "ProductName": {
+                  "style": "form"
+                },
+                "QuantityPerUnit": {
+                  "style": "form"
+                },
+                "UnitPrice": {
+                  "style": "form"
+                },
+                "UnitsInStock": {
+                  "style": "form"
+                },
+                "UnitsOnOrder": {
+                  "style": "form"
+                },
+                "ReorderLevel": {
+                  "style": "form"
+                },
+                "Discontinued": {
+                  "style": "form"
+                },
+                "CategoryName": {
+                  "style": "form"
+                },
+                "SupplierName": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Updates the product.",
+        "operationId": "Put",
+        "parameters": [
+          {
+            "name": "updateProductId",
+            "in": "query",
+            "description": "The createProductId.",
+            "schema": {
+              "type": "integer",
+              "description": "The createProductId.",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "createProductId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "ProductName",
+                  "ReorderLevel",
+                  "UnitPrice",
+                  "UnitsInStock",
+                  "UnitsOnOrder"
+                ],
+                "type": "object",
+                "properties": {
+                  "ProductId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "ProductName": {
+                    "type": "string"
+                  },
+                  "QuantityPerUnit": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "UnitPrice": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "UnitsInStock": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "UnitsOnOrder": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "ReorderLevel": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Discontinued": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "CategoryName": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "SupplierName": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              },
+              "encoding": {
+                "ProductId": {
+                  "style": "form"
+                },
+                "ProductName": {
+                  "style": "form"
+                },
+                "QuantityPerUnit": {
+                  "style": "form"
+                },
+                "UnitPrice": {
+                  "style": "form"
+                },
+                "UnitsInStock": {
+                  "style": "form"
+                },
+                "UnitsOnOrder": {
+                  "style": "form"
+                },
+                "ReorderLevel": {
+                  "style": "form"
+                },
+                "Discontinued": {
+                  "style": "form"
+                },
+                "CategoryName": {
+                  "style": "form"
+                },
+                "SupplierName": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Deletes a specific product.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "name": "deleteProductId",
+            "in": "query",
+            "description": "The createProductId.",
+            "schema": {
+              "type": "integer",
+              "description": "The createProductId.",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "createProductId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Category": {
+        "required": [
+          "categoryName",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "Product": {
+        "required": [
+          "productName",
+          "reorderLevel",
+          "unitPrice",
+          "unitsInStock",
+          "unitsOnOrder"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "quantityPerUnit": {
+            "type": "string",
+            "nullable": true
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "unitsInStock": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitsOnOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reorderLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "discontinued": {
+            "type": "boolean",
+            "default": false
+          },
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "supplierName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

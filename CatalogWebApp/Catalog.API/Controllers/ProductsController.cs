@@ -12,6 +12,7 @@ namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class ProductsController : ControllerBase
     {
         private readonly ILogger<ProductsController> _logger;
@@ -34,7 +35,9 @@ namespace Catalog.API.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/Products
+        /// <summary>
+        /// Gets all product.
+        /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
         public async Task<IEnumerable<Product>> Get()
@@ -43,19 +46,22 @@ namespace Catalog.API.Controllers
             return _mapper.Map<IEnumerable<Product>>(productDtos);
         }
 
-        // GET: api/Products/5
-        [HttpGet("{id}")]
+        /// <summary>
+        /// Gets a specific product.
+        /// </summary>
+        /// <param name="productId">The createProductId.</param>
+        [HttpGet("{createProductId}")]
         [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Product>> GetProduct(int? id)
+        public async Task<ActionResult<Product>> GetProduct(int? productId)
         {
-            if (id == null)
+            if (productId == null)
             {
-                _logger.LogError($"Product id can not be null.");
+                _logger.LogError($"Product createProductId can not be null.");
                 return NotFound();
             }
 
-            var productDto = await _productService.GetAsync((int)id);
+            var productDto = await _productService.GetAsync((int)productId);
             if (productDto == null)
             {
                 return NotFound();
@@ -64,11 +70,14 @@ namespace Catalog.API.Controllers
             return _mapper.Map<Product>(productDto);
         }
 
-        // POST api/Products
-        [HttpPost("{id}")]
+        /// <summary>
+        /// Creates a product.
+        /// </summary>
+        /// <param name="product">The product.</param>
+        [HttpPost("{createProductId}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Post([FromForm] Product product)
+        public async Task<ActionResult> Post(int createProductId, [FromForm] Product product)
         {
 	        if (product == null)
 	        {
@@ -86,11 +95,15 @@ namespace Catalog.API.Controllers
 	        return Ok();
         }
 
-        // PUT api/Products/5
-        [HttpPut("{id}")]
+        /// <summary>
+        /// Updates the product.
+        /// </summary>
+        /// <param name="updateProductId">The createProductId.</param>
+        /// <param name="product">The product.</param>
+        [HttpPut("{createProductId}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Put(int id, [FromForm] Product product)
+        public async Task<ActionResult> Put(int updateProductId, [FromForm] Product product)
         {
 	        if (product == null)
 	        {
@@ -115,20 +128,23 @@ namespace Catalog.API.Controllers
 	        return Ok();
         }
 
-        // DELETE api/Products/5
-        [HttpDelete("{id}")]
+        /// <summary>
+        /// Deletes a specific product.
+        /// </summary>
+        /// <param name="deleteProductId">The createProductId.</param>
+        [HttpDelete("{createProductId}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int deleteProductId)
         {
-	        var product = await _productService.GetAsync(id);
+	        var product = await _productService.GetAsync(deleteProductId);
 	        if (product == null)
 	        {
                 _logger.LogError("Product doesn't exist.");
 		        return NotFound();
 	        }
 
-	        await _productService.DeleteAsync(id);
+	        await _productService.DeleteAsync(deleteProductId);
 	        return Ok();
         }
     }

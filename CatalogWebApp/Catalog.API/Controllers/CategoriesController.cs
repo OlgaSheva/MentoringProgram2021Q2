@@ -12,6 +12,7 @@ namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class CategoriesController : ControllerBase
     {
         private readonly ILogger<CategoriesController> _logger;
@@ -28,27 +29,32 @@ namespace Catalog.API.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/Categories
+        /// <summary>
+        /// Gets all categories.
+        /// </summary>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> Get()
+        public async Task<ActionResult<IEnumerable<Category>>> GeCategories()
         {
             var categoriesDto = await _categoryService.GetAllAsync();
             return Ok(_mapper.Map<IEnumerable<Category>>(categoriesDto));
         }
 
-        // GET: api/Categories/5
-        [HttpGet("{id}")]
+        /// <summary>
+        /// Gets a specific category.
+        /// </summary>
+        /// <param name="categoryId">The categoryId.</param>
+        [HttpGet("{categoryId}")]
         [ProducesResponseType(typeof(Category), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Category>> GetCategory(int? id)
+        public async Task<ActionResult<Category>> GetCategory(int? categoryId)
         {
-            if (id == null)
+            if (categoryId == null)
             {
-                _logger.LogError($"Category id can not be null.");
+                _logger.LogError($"Category categoryId can not be null.");
                 return NotFound();
             }
 
-            var category = await _categoryService.GetAsync((int)id);
+            var category = await _categoryService.GetAsync((int)categoryId);
             if (category == null)
             {
                 return NotFound();
@@ -57,13 +63,17 @@ namespace Catalog.API.Controllers
             return Ok(_mapper.Map<Category>(category));
         }
 
-        // PUT api/Categories/5
-        [HttpPut("{id}")]
+        /// <summary>
+        /// Updates a specific category.
+        /// </summary>
+        /// <param name="categoryIdtegoryId.</param>
+        /// <param name="file">The picture file.</param>
+        [HttpPut("{categoryId}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Put(int id, IFormFile file)
+        public async Task<ActionResult> PutCategory(int categoryId, IFormFile file)
         {
-	        var category = await _categoryService.GetAsync((int)id);
+	        var category = await _categoryService.GetAsync((int)categoryId);
 	        if (file != null)
 	        {
 		        byte[] imageData = null;

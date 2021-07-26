@@ -17,8 +17,6 @@ namespace Catalog.API.Mapper
 		            opt => opt.MapFrom(src => src.Supplier.CompanyName))
 	            .ReverseMap();
             CreateMap<Product, ProductDTO>();
-            CreateMap<SupplierDTO, Supplier>();
-            CreateMap<Supplier, SupplierDTO>();
         }
     }
 }
