@@ -31,6 +31,12 @@ namespace Catalog.Services.Services
             return Mapping.Mapper.Map<CategoryDTO>(category);
         }
 
+        public async Task<CategoryDTO> GetAsync(string name)
+        {
+	        var category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryName == name);
+	        return Mapping.Mapper.Map<CategoryDTO>(category);
+        }
+
         public async Task<int> AddAsync(CategoryDTO category)
         {
             if (category == null)

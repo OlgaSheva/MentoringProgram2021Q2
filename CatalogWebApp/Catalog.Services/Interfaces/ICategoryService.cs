@@ -10,6 +10,8 @@ namespace Catalog.Services.Interfaces
 
         Task<CategoryDTO> GetAsync(int id);
 
+        Task<CategoryDTO> GetAsync(string name);
+
         Task<int> AddAsync(CategoryDTO category);
 
         Task<bool> EditAsync(CategoryDTO category);

@@ -1,0 +1,9 @@
+{
+  "OutputFolder": ".",
+  "Namespace": "Catalog.API.Client",
+  "LibraryName": null,
+  "SharedSourceFolders": [
+    "..\\..\\..\\..\\..\\..\\Users\\Volha_Krypulevich\\.autorest\\@autorest_csharp@3.0.0-beta.20210726.2\\node_modules\\@autorest\\csharp\\Generator.Shared",
+    "..\\..\\..\\..\\..\\..\\Users\\Volha_Krypulevich\\.autorest\\@autorest_csharp@3.0.0-beta.20210726.2\\node_modules\\@autorest\\csharp\\Azure.Core.Shared"
+  ]
+}

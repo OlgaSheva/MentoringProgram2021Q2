@@ -1,31 +1,34 @@
-﻿using Catalog.Services.Models;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-namespace Catalog.Models.ViewModels
+namespace Catalog.API.Models
 {
-    public class ProductViewModel
+    public class Product
     {
         public int ProductId { get; set; }
 
+        [Required]
         public string ProductName { get; set; }
-
-        public int? SupplierId { get; set; }
-
-        public int? CategoryId { get; set; }
 
         public string QuantityPerUnit { get; set; }
 
+        [Required]
         public decimal? UnitPrice { get; set; }
 
+        [Required]
         public short? UnitsInStock { get; set; }
 
+        [Required]
         public short? UnitsOnOrder { get; set; }
 
+        [Required]
         public short? ReorderLevel { get; set; }
 
+        [DefaultValue(false)]
         public bool Discontinued { get; set; }
 
-        public virtual CategoryDTO Category { get; set; }
+        public string CategoryName { get; set; }
 
-        public virtual SupplierDTO Supplier { get; set; }
-    }
+        public string SupplierName { get; set; }
+	}
 }

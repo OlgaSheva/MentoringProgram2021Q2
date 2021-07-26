@@ -7,5 +7,7 @@ namespace Catalog.Services.Interfaces
     public interface ISupplierService
     {
         Task<IEnumerable<SupplierDTO>> GetAllAsync();
+
+        Task<SupplierDTO> GetAsync(string name);
     }
 }

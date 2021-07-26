@@ -23,5 +23,11 @@ namespace Catalog.Services.Services
             var suppliers = await _context.Suppliers.ToArrayAsync();
             return Mapping.Mapper.Map<IEnumerable<SupplierDTO>>(suppliers);
         }
+
+        public async Task<SupplierDTO> GetAsync(string name)
+        {
+	        var supplier = await _context.Suppliers.FirstOrDefaultAsync(c => c.CompanyName == name);
+	        return Mapping.Mapper.Map<SupplierDTO>(supplier);
+        }
     }
 }
